@@ -13,7 +13,11 @@ const createStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      success: false,
+      messsage: "Something Went Wrong",
+      error: error,
+    });
   }
 };
 //Get student data from database
@@ -45,7 +49,11 @@ const getStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      success: false,
+      messsage: "Something Went Wrong",
+      error: error,
+    });
   }
 };
 
