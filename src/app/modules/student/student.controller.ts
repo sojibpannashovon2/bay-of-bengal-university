@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { StudentServices } from "./student.service";
 
-import * as z from "zod";
-import { id } from "zod/v4/locales";
+import studentValidationSchema from "./student.validation";
+// import * as z from "zod";
+
 
 const createStudent = async (req: Request, res: Response) => {
   try {
@@ -10,17 +11,19 @@ const createStudent = async (req: Request, res: Response) => {
 
     //?creating  a schema validation using zod
 
-    const studentValidationSchema = z.object({
-      id: z.string(),
-      name: z.object({
-        firstName: z.string().max(20, {
-          message: `First can not be more than 20 Character by Zod`,
-        }),
-      }),
-    });
+    const zodParsedData = studentValidationSchema.parse(studentData);
+
+    // const studentValidationSchema = z.object({
+    //   id: z.string(),
+    //   name: z.object({
+    //     firstName: z.string().max(20, {
+    //       message: `First can not be more than 20 Character by Zod`,
+    //     }),
+    //   }),
+    // });
 
     //? Will call service function to send this data
-    const result = await StudentServices.createStudentIntoDB(studentData);
+    const result = await StudentServices.createStudentIntoDB(zodParsedData);
     //? Send Response
     res.status(200).json({
       success: true,

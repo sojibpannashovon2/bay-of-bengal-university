@@ -24,6 +24,7 @@ export const userNameValidationSchema = z.object({
 
 export const guardianValidationSchema = z.object({
   fatherName: z.string().min(1, "Father Name is Required"),
+  fatherOccupation: z.string().min(1, "Father Occupation is Required"),
 
   fatherContactNo: z.string().min(1, "Father Contact No is Required"),
 
@@ -46,7 +47,7 @@ export const localGuardianValidationSchema = z.object({
 
 //? Main Student Schema
 
-export const studentValidationSchema = z.object({
+const studentValidationSchema = z.object({
   id: z.string().min(1, "Student ID is Required"),
 
   name: userNameValidationSchema,
@@ -81,7 +82,7 @@ export const studentValidationSchema = z.object({
 
   localGurdian: localGuardianValidationSchema,
 
-  profileImage: z.string().optional(),
+  profileImage: z.string(),
 
   isActive: z.enum(["active", "blocked"]).default("active"),
 });
@@ -89,3 +90,6 @@ export const studentValidationSchema = z.object({
 /* ===============================
    5️⃣ Type Inference
 ================================= */
+
+
+export default studentValidationSchema;
