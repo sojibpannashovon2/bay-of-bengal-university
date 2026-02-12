@@ -1,11 +1,11 @@
-import { Schema, model, connect } from "mongoose";
+import { Schema, model } from "mongoose";
 import {
   Gurdian,
   LocalGurdian,
   Student,
   UserName,
 } from "./student/student.interface";
-
+import validator from "validator";
 // 1. Create a Schema corresponding to the document interface.
 
 const userNameSchema = new Schema<UserName>({
@@ -35,6 +35,10 @@ const userNameSchema = new Schema<UserName>({
     type: String,
     required: [true, "Last Name Required"],
     trim: true,
+    validate: {
+      validator: (value: string) => validator.isAlpha(value),
+      message: `{VALUE} is not valid`,
+    },
   },
 });
 
@@ -105,10 +109,9 @@ const studentSchema = new Schema<Student>({
     required: true,
     unique: true,
     lowercase: true,
+    //Using NPM Validator
     validate: {
-      validator: function (value: string) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-      },
+      validator: (value: string) => validator.isEmail(value),
       message: "Invalid email format",
     },
   },
