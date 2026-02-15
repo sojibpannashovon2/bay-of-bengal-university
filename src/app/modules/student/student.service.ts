@@ -3,7 +3,7 @@ import { StudentModel } from "../student.model";
 import { Student } from "./student.interface";
 
 const createStudentIntoDB = async (student: Student) => {
-  const result = await StudentModel.create(student);
+  const result = await StudentModel.create(student); //? built in static Methods
   return result;
 };
 //? Get all database from student database
