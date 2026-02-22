@@ -1,14 +1,15 @@
 import { Schema, model } from "mongoose";
 import {
-  Gurdian,
-  LocalGurdian,
-  Student,
-  UserName,
+  TGurdian,
+  TLocalGurdian,
+  TStudent,
+  StudentModel,
+  TUserName,
 } from "./student/student.interface";
 import validator from "validator";
 // 1. Create a Schema corresponding to the document interface.
 
-const userNameSchema = new Schema<UserName>({
+const userNameSchema = new Schema<TUserName>({
   firstName: {
     type: String,
     required: [true, "First Name Must Be Enter"],
@@ -42,7 +43,7 @@ const userNameSchema = new Schema<UserName>({
   },
 });
 
-const gurdianSchema = new Schema<Gurdian>({
+const gurdianSchema = new Schema<TGurdian>({
   fatherName: {
     type: String,
     required: [true, "Father Name is Required"],
@@ -65,7 +66,7 @@ const gurdianSchema = new Schema<Gurdian>({
   },
 });
 
-const localGurdianSchema = new Schema<LocalGurdian>({
+const localGurdianSchema = new Schema<TLocalGurdian>({
   name: {
     type: String,
     required: [true, "Local Gurdian Name is Required"],
@@ -84,7 +85,7 @@ const localGurdianSchema = new Schema<LocalGurdian>({
   },
 });
 
-const studentSchema = new Schema<Student>({
+const studentSchema = new Schema<TStudent, StudentModel>({
   id: { type: String, required: true, unique: true },
 
   //?Built in validation
@@ -154,7 +155,22 @@ const studentSchema = new Schema<Student>({
   },
 });
 
+//? Creating a custom static method
+
+studentSchema.statics.isUserExist = async function (id: string) {
+  const existingUser = await Student.findOne({ id });
+
+  return existingUser;
+};
+
+//? Creating a custom instance method
+/*
+studentSchema.methods.isUserExist = async function (id: string) {
+  const existingUser = await Student.findOne({ id });
+  return existingUser;
+};
+*/
 //! 2. Create a Model.
 // const User = model("User", userSchema);
 
-export const StudentModel = model<Student>("Student", studentSchema);
+export const Student = model<TStudent, StudentModel>("Student", studentSchema);

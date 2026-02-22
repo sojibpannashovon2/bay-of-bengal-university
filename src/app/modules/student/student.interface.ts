@@ -1,6 +1,6 @@
-import { Schema, model, connect } from "mongoose";
+import { Schema, model, connect, Model } from "mongoose";
 
-export type Gurdian = {
+export type TGurdian = {
   fatherName: string;
   fatherOccupation: string;
   fatherContactNo: string;
@@ -9,23 +9,23 @@ export type Gurdian = {
   motherContactNo: string;
 };
 
-export type UserName = {
+export type TUserName = {
   firstName: string;
   middleName: string;
   lastName: string;
 };
 
-export type LocalGurdian = {
+export type TLocalGurdian = {
   name: string;
   occupation: string;
   contactNo: string;
   address: string;
 };
 
-export type Student = {
+export type TStudent = {
   id: string;
-  name: UserName;
-  gender: "male" | "female" |"other";
+  name: TUserName;
+  gender: "male" | "female" | "other";
   dateOfBirth?: string;
   email: string;
   contactNo: string;
@@ -34,8 +34,30 @@ export type Student = {
 
   presentAddress: string;
   permanentAddress: string;
-  gurdian: Gurdian;
-  localGurdian: LocalGurdian;
+  gurdian: TGurdian;
+  localGurdian: TLocalGurdian;
   profileImage?: string;
   isActive: "active" | "blocked";
 };
+
+//? Now creating the static method
+
+export interface StudentModel extends Model<TStudent> {
+  isUserExist(id: string): Promise<TStudent | null>;
+}
+
+//! If Student is null than is controller studentSchema.methods will be error
+
+/*
+ --- This is for creating instance method ---
+export type StudentMethods = {
+  isUserExist(id: string): Promise<TStudent | null>;
+};
+
+
+export type StudentModel = Model<
+  TStudent,
+  Record<string, never>
+  // StudentMethods
+>;
+*/

@@ -1,19 +1,35 @@
 // Query works is Mongoose Model in Service Page
-import { StudentModel } from "../student.model";
-import { Student } from "./student.interface";
+import { Student } from "../student.model";
+import { TStudent } from "./student.interface";
 
-const createStudentIntoDB = async (student: Student) => {
-  const result = await StudentModel.create(student); //? built in static Methods
+const createStudentIntoDB = async (studentData: TStudent) => {
+  //? built in static Methods
+
+  if (await Student.isUserExist(studentData.id)) {
+    throw new Error("User Already Exists");
+  }
+  const result = await Student.create(studentData);
+
+  //?Custom instance method
+  /*  const student = new Student(studentData); //! Create an instance
+  if (await student.isUserExist(student.id)) {
+     throw new Error("User Already Exists");
+   }
+
+   const result = await student.save();  
+   
+   */
+
   return result;
 };
 //? Get all database from student database
 const getAllStudentsFromDB = async () => {
-  const result = await StudentModel.find();
+  const result = await Student.find();
   return result;
 };
 //?Get Single Data from student database
 const getStudentFromDB = async (id: string) => {
-  const result = await StudentModel.findOne({ id });
+  const result = await Student.findOne({ id });
   return result;
 };
 export const StudentServices = {
