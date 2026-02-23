@@ -39,6 +39,7 @@ export type TStudent = {
   localGurdian: TLocalGurdian;
   profileImage?: string;
   isActive: "active" | "blocked";
+  isDeleted: boolean;
 };
 
 //? Now creating the static method

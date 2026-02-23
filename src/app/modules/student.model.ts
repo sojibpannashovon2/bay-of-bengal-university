@@ -92,7 +92,7 @@ const studentSchema = new Schema<TStudent, StudentModel>({
   password: {
     type: String,
     required: [true, "Password is required"],
-    unique: true,
+    // unique: true,
     maxLength: [20, "Password can not be more than 20 characters"],
   },
 
@@ -161,9 +161,14 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     enum: ["active", "blocked"],
     default: "active",
   },
+
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-//? Pre save middleware/ hook
+//? Pre save middleware/ hook - Document Middleware
 studentSchema.pre("save", async function () {
   // console.log(this, "Pre hook: we will save data");
   // Hashing password and save into database
@@ -174,10 +179,28 @@ studentSchema.pre("save", async function () {
   );
 });
 
-//? Post save middleware/ hook
+//? Post save middleware/ hook - Document Middleware
 
-studentSchema.post("save", function () {
-  console.log(this, "Post hook: we saved our data");
+studentSchema.post("save", function (doc, next) {
+  // console.log(this, "Post hook: we saved our data");
+  doc.password = "";
+  next();
+});
+
+//? Query Middleware
+
+studentSchema.pre("find", function (next) {
+  // console.log(this);
+  this.find({ isDeleted: { $ne: true } });
+});
+
+studentSchema.pre("findOne", function (next) {
+  // console.log(this);
+  this.find({ isDeleted: { $ne: true } });
+});
+
+studentSchema.pre("aggregate", function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
 });
 
 //? Creating a custom static method
