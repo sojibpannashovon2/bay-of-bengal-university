@@ -7,6 +7,8 @@ import {
   TUserName,
 } from "./student/student.interface";
 import validator from "validator";
+import bcrypt from "bcrypt";
+import config from "../config";
 // 1. Create a Schema corresponding to the document interface.
 
 const userNameSchema = new Schema<TUserName>({
@@ -87,6 +89,12 @@ const localGurdianSchema = new Schema<TLocalGurdian>({
 
 const studentSchema = new Schema<TStudent, StudentModel>({
   id: { type: String, required: true, unique: true },
+  password: {
+    type: String,
+    required: [true, "Password is required"],
+    unique: true,
+    maxLength: [20, "Password can not be more than 20 characters"],
+  },
 
   //?Built in validation
   name: {
@@ -153,6 +161,23 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     enum: ["active", "blocked"],
     default: "active",
   },
+});
+
+//? Pre save middleware/ hook
+studentSchema.pre("save", async function () {
+  // console.log(this, "Pre hook: we will save data");
+  // Hashing password and save into database
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+});
+
+//? Post save middleware/ hook
+
+studentSchema.post("save", function () {
+  console.log(this, "Post hook: we saved our data");
 });
 
 //? Creating a custom static method
