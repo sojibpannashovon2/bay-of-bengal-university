@@ -97,12 +97,12 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     unique: true,
     ref: "User", //? Conect With proposed Model
   },
-  password: {
-    type: String,
-    required: [true, "Password is required"],
-    // unique: true,
-    maxLength: [20, "Password can not be more than 20 characters"],
-  },
+  // password: {
+  //   type: String,
+  //   required: [true, "Password is required"],
+  //? unique: true,
+  //   maxLength: [20, "Password can not be more than 20 characters"],
+  // },
 
   //?Built in validation
   name: {
@@ -174,25 +174,6 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     type: Boolean,
     default: false,
   },
-});
-
-//? Pre save middleware/ hook - Document Middleware
-studentSchema.pre("save", async function () {
-  // console.log(this, "Pre hook: we will save data");
-  // Hashing password and save into database
-  const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-});
-
-//? Post save middleware/ hook - Document Middleware
-
-studentSchema.post("save", function (doc, next) {
-  // console.log(this, "Post hook: we saved our data");
-  doc.password = "";
-  next();
 });
 
 //? Query Middleware
