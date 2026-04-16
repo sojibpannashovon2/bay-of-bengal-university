@@ -1,34 +1,6 @@
 import { Request, Response } from "express";
 import { StudentServices } from "./student.service";
 
-import studentValidationSchema from "./student.validation";
-// import * as z from "zod";
-
-const createStudent = async (req: Request, res: Response) => {
-  try {
-    const { student: studentData } = req.body;
-
-    //?creating  a schema validation using zod
-
-    const zodParsedData = studentValidationSchema.parse(studentData);
-
-    //? Will call service function to send this data
-    const result = await StudentServices.createStudentIntoDB(zodParsedData);
-    //? Send Response
-    res.status(200).json({
-      success: true,
-      message: "Student is created Sucessfully",
-      data: result,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      messsage: error.message || "Something Went Wrong",
-      error: error,
-    });
-  }
-};
-
 //Get student data from database
 
 const getAllStudents = async (req: Request, res: Response) => {
@@ -93,7 +65,7 @@ const deleteStudent = async (req: Request, res: Response) => {
 };
 
 export const StudentControllers = {
-  createStudent,
+  //? createStudent,  -- Refactoring to user controller
   getAllStudents,
   getStudent,
   deleteStudent,

@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema<TUser>(
     status: {
       type: String,
       enum: ["in-progress", "blocked"],
+      default: "in-progress",
     },
     isDeleted: {
       type: Boolean,
@@ -39,5 +40,13 @@ const userSchema = new mongoose.Schema<TUser>(
     timestamps: true,
   },
 );
+
+//? Creating a custom static method
+
+userSchema.statics.isUserExist = async function (id: string) {
+  const existingUser = await User.findOne({ id });
+
+  return existingUser;
+};
 
 export const User = mongoose.model<TUser>("User", userSchema);

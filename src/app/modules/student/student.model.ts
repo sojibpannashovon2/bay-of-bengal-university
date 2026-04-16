@@ -89,6 +89,14 @@ const localGurdianSchema = new Schema<TLocalGurdian>({
 
 const studentSchema = new Schema<TStudent, StudentModel>({
   id: { type: String, required: true, unique: true },
+  user: {
+    type: Schema.Types.ObjectId,
+    //This defines user as a field that stores another document’s ID (reference).
+    //The user field will store a MongoDB ObjectId (a unique ID).
+    required: [true, "User Id is Required"],
+    unique: true,
+    ref: "User", //? Conect With proposed Model
+  },
   password: {
     type: String,
     required: [true, "Password is required"],
@@ -156,11 +164,11 @@ const studentSchema = new Schema<TStudent, StudentModel>({
   },
 
   profileImage: { type: String },
-  isActive: {
-    type: String,
-    enum: ["active", "blocked"],
-    default: "active",
-  },
+  // isActive: {
+  //   type: String,
+  //   enum: ["active", "blocked"],
+  //   default: "active",
+  // },
 
   isDeleted: {
     type: Boolean,
