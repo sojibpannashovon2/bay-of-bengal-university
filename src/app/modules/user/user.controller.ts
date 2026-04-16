@@ -1,11 +1,15 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 import { userNameValidationSchema } from "../student/student.validation";
 import { userServices } from "./user.service";
 
 //Refactoring - Move create Student data to User Data
 
-const createStudent = async (req: Request, res: Response) => {
+const createStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { password, student: studentData } = req.body;
 
@@ -25,11 +29,7 @@ const createStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      messsage: error.message || "Something Went Wrong",
-      error: error,
-    });
+    next(error);
   }
 };
 

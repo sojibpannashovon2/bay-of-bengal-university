@@ -1,9 +1,13 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { StudentServices } from "./student.service";
 
 //Get student data from database
 
-const getAllStudents = async (req: Request, res: Response) => {
+const getAllStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await StudentServices.getAllStudentsFromDB();
     res.status(200).json({
@@ -12,17 +16,18 @@ const getAllStudents = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      messsage: error.message || "Something Went Wrong",
-      error: error,
-    });
+    // res.status(500).json({
+    //   success: false,
+    //   messsage: error.message || "Something Went Wrong",
+    //   error: error,
+    // });
+    next(error);
   }
 };
 
 //?Get Single Student from Database
 
-const getStudent = async (req: Request, res: Response) => {
+const getStudent = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // const studentId = req.params.studentId;
     const { studentId } = req.params;
@@ -34,17 +39,17 @@ const getStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      messsage: error.message || "Something Went Wrong",
-      error: error,
-    });
+    next(error);
   }
 };
 
 //!Delete Single Student from Database
 
-const deleteStudent = async (req: Request, res: Response) => {
+const deleteStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     // const studentId = req.params.studentId;
     const { studentId } = req.params;
@@ -56,11 +61,7 @@ const deleteStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      messsage: error.message || "Something Went Wrong",
-      error: error,
-    });
+    next(error);
   }
 };
 

@@ -66,7 +66,7 @@ userSchema.pre("save", async function () {
 
 userSchema.post("save", function (doc, next) {
   // console.log(this, "Post hook: we saved our data");
-  doc.password = "";
+  doc.password = " ";
   next();
 });
 
