@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-
+import status from "http-status";
 import { userNameValidationSchema } from "../student/student.validation";
 import { userServices } from "./user.service";
+import sendResponse from "../../utils/sendResponse";
 
 //Refactoring - Move create Student data to User Data
 
@@ -23,7 +24,14 @@ const createStudent = async (
       studentData,
     );
     //? Send Response
-    res.status(200).json({
+    // res.status(200).json({
+    //   success: true,
+    //   message:
+    //   data: result,
+    // });
+
+    sendResponse(res, {
+      statusCode: status.OK,
       success: true,
       message: "Student is created Sucessfully",
       data: result,

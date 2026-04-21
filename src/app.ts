@@ -4,6 +4,7 @@ import { StudentRoutes } from "./app/modules/student/student.route";
 import { UserRoutes } from "./app/modules/user/user.route";
 import { success } from "zod";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
+import { notFound } from "./app/middleware/notFound";
 
 const app: Application = express();
 
@@ -24,6 +25,8 @@ app.get("/", (req: Request, res: Response) => {
 
 //CWD == Means Corrent Working Derectory
 
+//? Global Error handler
 app.use(globalErrorHandler);
-
+//? Global API Not Found Page
+app.use(notFound);
 export default app;
